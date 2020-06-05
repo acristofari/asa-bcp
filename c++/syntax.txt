@@ -1,0 +1,98 @@
+The ASA-BCP algorithm is described in the following paper:
+
+A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
+Active-Set Algorithm for Bound-Constrained Optimization. Journal of
+Optimization Theory and Applications, 172(2), 369-401.
+
+The ASA-BCP algorithm is implemented in the funciton 'asa_bcp', defined in
+the file 'asa_bcp.cpp'.
+
+In particular, the function Asa_bcp tries to minimize an objective
+function of several variables subject to bound constraints by using the
+ASA-BCP algorithm described in the above paper.
+
+The problem can be set in the file 'problem.cpp', where you have to define
+- the problem dimension 'n' (in the 'problem' constructor),
+- a function 'funct' that computes the value of the objective function at
+  a given point,
+- a function 'grad' that computes the gradient of the objective function
+  at a given point,
+- a function 'hd_prod' that computes the product of a given vector with
+  the Hessian matrix of the objective function at a given point.
+- a function 'bounds' that returns the lower bound 'l' and the upper bound
+  'u' on the variables (there is no i-th lower bound if l(i) <= -1e20 and
+  there is no i-th upper bound if u(i) >= 1e20);
+- a function 'starting_point' that returns the starting point of the
+  algorithm.
+
+The function 'hd_prod' can be ignored (in the sense that it can return
+any dummy value) if Hessian-vector products are approximated (see below
+the parameter 'hd_exact').
+
+The output values can be obtained by the following functions:
+- 'get_x', which returns the solution found by the algorithm;
+- 'get_f', which returns the objective value at the solution found by the
+   algorithm;
+- 'get_sup_norm_proj_g', which returns the sup-norm of x - p[x-g(x)],
+   where x is the solution found by the algorithm, p[.] is the projection
+   operator onto [l,u] and g(.) is the gradient of the objective function;
+- 'get_it', which returns the number of iterations;
+- 'get_inner_it', which returns the number of inner conjugate gradient
+   iterations;
+- 'get_n_f', which returns the number of function evaluations;
+- 'get_n_g', which returns the number of gradient evaluations;
+- 'get_n_hd', which returns the number of Hessian-vector products;
+- 'get_flag', which returns an integer describing the exit condition:
+    -1 if the problem is infeasible,
+     0 if the sup-norm of x - p[x-g(x)] <= 'eps_opt'
+       (default value of 'eps_opt' = 1e-5),
+     1 if the directional derivative of the objective function along the
+       search direction (in absolute value) <= 'min_gd'
+       (default value of 'min_gd' = 1e-15),
+     2 if the norm of the projected search direction <= 'min_norm_proj_d'
+       (default value of 'min_norm_proj_d' = 1e-9),
+     3 if the stepsize <= 'min_stepsize'
+       (default value of 'min_stepsize' = 1e-20),
+     4 if the number of iterations >= 'max_it'
+       (default value of 'max_it' = 1000000),
+     5 if the number of function evaluations >= 'max_n_f'
+       (default value of 'max_n_f' = 1000000),
+     6 if the number of gradient evaluations >= 'max_n_g'
+       (default value of 'max_n_g' = 1000000),
+     7 if the number of Hessian-vector products >= 'max_n_hd'
+       (default value of 'max_n_hd' = 1000000),
+     8 if the objective value <= 'min_f'
+       (default value of 'min_f' = -1e90),
+     9 in case of error when computing the objective function,
+    10 in case of error when computing the gradient of the objective
+       function,
+    11 in case of error when computing the Hessian-vector product.
+
+To change the values of the above parameters 'eps_opt', 'min_gd',
+'min_proj_d', 'min_stepsize', 'max_it', 'max_n_f', 'max_n_g', 'max_n_hd'
+and 'min_f', create an object of structure type asa_bcp_options (see its
+declaration in the file 'asa_bcp.h'), assign new values to (some of its)
+members and pass the address of the structure object as third input
+argument when calling the Asa_bcp constructor.
+Other parameters that can be changed in the same way are the following:
+- 'm': history length for the computation of the reference value in the
+       line search: set 'm' > 1 for non-monotone line search, or 'm' = 1
+       for monotone line search 
+       (default value of 'm' = 100);
+- 'z': according to the non-monotone strategy, the objective function must
+       be evaluated upon at least once every 'z' iterations
+       (default value of 'z' = 20);
+- 'hd_exact': true to compute exact Hessian-vector products, false to
+              approximate them
+              (default value of 'hd_exact' = true);
+- 'verbosity': 0 for no prints, 1 for synthetic prints, 2 for detailed
+               prints
+               (default value of 'verbosity' = 1).
+
+If 'verbosity' is positive, then the iteration details will be also
+reported in the file 'iteration_history.txt'.
+
+Finally, if 'hd_exact' is false, the Hessian-vector product H(x)*d is
+approximated with [g(x+eps_approx*d)-g(x)]/eps_approx, where g(.) is the
+gradient of the objective function and the default value of 'eps_approx'
+is 1e-6.
