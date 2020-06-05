@@ -1,0 +1,25 @@
+#!/bin/bash
+# Definitions for the asa_bcp package
+# A. Cristofari, M. De Santis, S. Lucidi and F. Rinaldi
+# Last update of this file: June 5th, 2020
+# (Modified copy of the original version by N. Gould, D. Orban and Ph. Toint)
+
+# The name of the package
+export PACKAGE=asa_bcp
+
+# Subdirectory of ${CUTEST}/src where the package lives
+export PACKDIR=asa_bcp
+
+# Precision for which the package was written
+# Valid values are "single", "double", "single double" and "double single"
+export PACK_PRECISION="double"
+
+# Define the name of any package object files used; any object file without
+# a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/
+export PACKOBJS="${CUTEST}/src/asa_bcp/asa_bcp.o"
+
+# Define package and system libraries using -llibrary to include library.a
+# or library.so together with any nonstandard library paths using -L(path)
+export PACKLIBS=""
+
+
