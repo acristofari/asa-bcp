@@ -28,7 +28,7 @@
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 !
 ! Last update of this file:
-! June 5th, 2020
+! December 18th, 2020
 !
 ! Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
 ! Stefano Lucidi, Francesco Rinaldi.
@@ -97,11 +97,11 @@ program main
     
     ! ------------------------------------------------------------------------------------
     ! *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-    ! (see the description of asa_bcp in file 'asa_bcp.f90' to know which parameters can
+    ! (see the description of asa_bcp in the file 'asa_bcp.f90' to know which parameters can
     ! be changed and their default values)
     !
     ! Assign new values to (some of) the members of the object 'opts' of derived data type
-    ! 'asa_bcp_options' (see its declaration in the module 'asa_bcp_opts'), for instance:
+    ! 'asa_bcp_options' (see its declaration in the module 'asa_bcp_opts'), e.g.,:
     !
     !   opts%verbosity = 0
     ! ------------------------------------------------------------------------------------
