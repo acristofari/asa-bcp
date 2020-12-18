@@ -28,7 +28,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 //
 // Last update of this file:
-// June 5th, 2020
+// December 18th, 2020
 //
 // Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
 // Stefano Lucidi, Francesco Rinaldi.
@@ -88,23 +88,20 @@ int main() {
 
     // ------------------------------------------------------------------------------------------------------------
     // *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-    // (see the description of Asa_bcp in file 'asa_bcp.cpp' to know which parameters can be changed and their
+    // (see the description of Asa_bcp in the file 'asa_bcp.cpp' to know which parameters can be changed and their
     // default values)
     //
     // Instead of creating the object 'alg' by the above instruction 'Asa_bcp alg(status,&p);', do the following:
     //
-    // (1) create an object of structure type asa_bcp_options (see its declaration in file 'asa_bcp.h'),
-    //     for instance:
+    // (1) create an object of structure type asa_bcp_options (see its declaration in file 'asa_bcp.h'), e.g.,:
     //
     //       asa_bcp_options opts;
     //
-    // (2) assign new values to (some of) the members of the new structure object,
-    //     for instance:
+    // (2) assign new values to (some of) the members of the new structure object, e.g.,:
     //
     //       opts.verbosity = 0;
     //
-    // (3) pass the address of the structure object as third input argument when calling the Asa_bcp constructor,
-    //     for instance:
+    // (3) pass the address of the structure object as third input argument when calling the Asa_bcp constructor, e.g.,:
     //
     //       Asa_bcp alg(status,&p,&opts);
     // ------------------------------------------------------------------------------------------------------------
