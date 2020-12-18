@@ -33,8 +33,7 @@ How to use ASA-BCP (via C++ source MEX file for Matlab)
     - 'asa_bcp_matlab.cpp',
     - 'make.m',
     - 'problem.h',
-    - 'README.txt',
-    - 'syntax.txt'.
+    - 'README.txt'.
 
     You will also need the files 'asa_bcp.h' and 'asa_bcp.cpp', located in
     '../c++', and the files 'main.m' and 'problem.m', located in
@@ -42,8 +41,8 @@ How to use ASA-BCP (via C++ source MEX file for Matlab)
 
 2 - Run 'make.m' to build the MEX file.
 
-3 - See the file 'syntax.txt' to know how to set the problem, change
-    algorithm parameters and get output values.
+3 - See the file '../matlab/syntax.txt' to know how to set the problem,
+    change algorithm parameters and get output values.
 
 4 - Copy the files 'main.m' and 'problem.m' from '../matlab' to the current
     directory for running an example. After copying the files, to run the 
