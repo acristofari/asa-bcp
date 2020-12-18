@@ -185,4 +185,4 @@ subroutine hd_prod(status,n,goth,x,d,hd)
     
     call CUTEST_uhprod(status,n,goth,x,d,hd)
     return
-end subroutine    
+end subroutine
