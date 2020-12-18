@@ -9,8 +9,7 @@
 ! with f(x) twice continuously differentiable.
 !
 ! This is a driver for running ASA-BCP on CUTEst problems.
-! See file 'README.txt' to have information on how to compile and run the
-! program.
+! See the file 'README.txt' to know how to run the program.
 !
 ! -------------------------------------------------------------------------
 !
@@ -29,7 +28,7 @@
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 !
 ! Last update of this file:
-! June 5th, 2020
+! December 18th, 2020
 !
 ! Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
 ! Stefano Lucidi, Francesco Rinaldi.
