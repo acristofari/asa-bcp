@@ -9,7 +9,7 @@
 % with f(x) twice continuously differentiable.
 %
 % This is a driver for running ASA-BCP on user-defined problems.
-% See the file 'README.txt' to know how to compile and run the program.
+% See the file 'README.txt' to know how to run the program.
 %
 % -------------------------------------------------------------------------
 %
@@ -28,7 +28,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 %
 % Last update of this file:
-% June 5th, 2020
+% December 18th, 2020
 %
 % Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
 % Stefano Lucidi, Francesco Rinaldi.
@@ -58,23 +58,23 @@ t_start = tic;
 [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u);
 t_tot = toc(t_start);
 
-%-------------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 % *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-% (see the description of asa_bcp in file 'asa_bcp.m' to know which 
+% (see the description of asa_bcp in the file 'asa_bcp.m' to know which 
 % parameters can be changed and their default values)
 %
 % Instead of calling the solver by the above instruction
 % '[x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u);', do the following:
 %
 % (1) create a structure having as field names the names of the parameters
-%     to be changed and assign them new values, for instance:
+%     to be changed and assign them new values, e.g.,:
 %
 %       opts.verbosity = 0;
 %
-% (2)  pass the structure to 'asa_bcp' as fifth input argument, for instance:
+% (2) pass the structure to 'asa_bcp' as fifth input argument, e.g.,:
 %
 %       [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u,opts);
-%-------------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 
 % write statistics to the screen and to file 'statistics.txt'
 fid = fopen('statistics.txt','w');

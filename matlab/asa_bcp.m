@@ -25,7 +25,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 %
 % Last update of this file:
-% June 5th, 2020
+% December 18th, 2020
 %
 % Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
 % Stefano Lucidi, Francesco Rinaldi.
@@ -1214,12 +1214,8 @@ function [x,f,asa_bcp_info] = asa_bcp(obj,x,l,u,opts)
     
     %-------------------------------------------------------------------------------------
     function update_w() % update the vector of reference values
-        f_w = f;
-        for j = m:-1:2
-            w(j) = w(j-1);
-            f_w = max(f_w,w(j));
-        end
-        w(1) = f;
+        w = [f; w(1:m-1)];
+        f_w = max(w);
         it_nm = 0;
     end
     %-------------------------------------------------------------------------------------

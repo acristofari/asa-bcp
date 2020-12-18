@@ -1,12 +1,3 @@
-The ASA-BCP algorithm is described in the following paper:
-
-A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
-Active-Set Algorithm for Bound-Constrained Optimization. Journal of
-Optimization Theory and Applications, 172(2), 369-401.
-
-The ASA-BCP algorithm is implemented in the function 'asa_bcp', defined in
-the file 'asa_bcp.m'.
-
 Syntax:
 X = ASA_BCP(OBJ,X0,L,U)
 X = ASA_BCP(OBJ,X0,L,U,OPTS)
