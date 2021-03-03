@@ -3,13 +3,10 @@
 ! This file is part of ASA-BCP, which is a solver for bound-constrained
 ! optimization problems of the following form:
 !
-!                                 min f(x)
+!                                min f(x)
 !                           s.t. l <= x <= u
 !
-! with f(x) twice continuously differentiable.
-!
-! This is a driver for running ASA-BCP on user-defined problems.
-! See the file 'README.txt' to know how to run the program.
+! where f(x) is a twice continuously differentiable.
 !
 ! -------------------------------------------------------------------------
 !
@@ -19,7 +16,7 @@
 ! Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 ! Optimization Theory and Applications, 172(2), 369-401.
 !
-! -------------------------------------------------------------------------
+!-------------------------------------------------------------------------
 !
 ! Authors:
 ! Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
@@ -28,10 +25,7 @@
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 !
 ! Last update of this file:
-! December 18th, 2020
-!
-! Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
-! Stefano Lucidi, Francesco Rinaldi.
+! March 3rd, 2021
 !
 ! Licensing:
 ! This file is part of ASA-BCP.
@@ -45,6 +39,9 @@
 ! GNU General Public License for more details.
 ! You should have received a copy of the GNU General Public License
 ! along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
+!
+! Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+! Stefano Lucidi, Francesco Rinaldi.
 !
 ! -------------------------------------------------------------------------
 
@@ -61,34 +58,37 @@ program main
     real :: time_start,time_end,elap_time
     type(asa_bcp_options) :: opts
     
-    ! get problem dimension
+    ! In this file, we show how to call ASA-BCP to solve a user-defined problem.
+    
+    ! (1) Get problem dimension
     call prob_dim(status,n)
     
-    ! check if an error occurred with the problem dimension
-    ! (something went wrong if 'status' > 0)
+    ! (2) Check if an error occurred with the problem dimension
+    !     (something went wrong if 'status' > 0)
     if (status > 0) then
         write(*,*) "error with the problem dimension"
         stop
     endif
     
-    ! allocate vectors
+    ! (3) Allocate vectors
     allocate(x(n),l(n),u(n))
     
-    ! get the lower and upper bounds
+    ! (4) Get lower and upper bounds
     call bounds(status,n,l,u)
-    ! check if an error occurred with the lower and upper bounds
-    ! (something went wrong if 'status' > 0)
+    
+    ! (5) Check if an error occurred with the lower and upper bounds
+    !     (something went wrong if 'status' > 0)
     if (status > 0) then
         write(*,*) "error with the lower and upper bounds"
         deallocate(x,l,u)
         stop
     endif
     
-    ! get the starting point
+    ! (6) Get the starting point
     call starting_point(status,n,x)
     
-    ! check if an error occurred with the starting point
-    ! (something went wrong if 'status' > 0)
+    ! (7) Check if an error occurred with the starting point
+    !     (something went wrong if 'status' > 0)
     if (status > 0) then
         write(*,*) "error with the starting point"
         deallocate(x,l,u)
@@ -97,16 +97,16 @@ program main
     
     ! ------------------------------------------------------------------------------------
     ! *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-    ! (see the description of asa_bcp in the file 'asa_bcp.f90' to know which parameters can
+    ! (see the description of asa_bcp in the file 'syntax.txt' to know which parameters can
     ! be changed and their default values)
     !
     ! Assign new values to (some of) the members of the object 'opts' of derived data type
-    ! 'asa_bcp_options' (see its declaration in the module 'asa_bcp_opts'), e.g.,:
+    ! 'asa_bcp_options' (see its declaration in the module 'asa_bcp_opts'), e.g.,
     !
     !   opts%verbosity = 0
     ! ------------------------------------------------------------------------------------
     
-    ! call the solver
+    ! (8) call ASA-BCP
     call cpu_time(time_start)
     call asa_bcp(n,x,f,l,u,opts,flag)
     call cpu_time(time_end)
