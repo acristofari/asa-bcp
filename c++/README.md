@@ -22,7 +22,7 @@ Journal of Optimization Theory and Applications, 172(2), 369-401.](https://link.
 * Stefano Lucidi (e-mail: [lucidi@diag.uniroma1.it](mailto:lucidi@diag.uniroma1.it))
 * Francesco Rinaldi (e-mail: [rinaldi@math.unipd.it](mailto:rinaldi@math.unipd.it))
 
-## Licensing:
+## Licensing
 
 ASA-BCP is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
