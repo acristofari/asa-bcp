@@ -23,9 +23,9 @@ The output values can be obtained by the following functions:
 - 'get_x', which returns the solution found by the algorithm;
 - 'get_f', which returns the objective value at the solution found by the
    algorithm;
-- 'get_sup_norm_proj_g', which returns the sup-norm of x - p[x-g(x)],
-   where x is the solution found by the algorithm, p[.] is the projection
-   operator onto [l,u] and g(.) is the gradient of the objective function;
+- 'get_sup_norm_proj_g', which returns the sup-norm of X - P[X-G(X)],
+   where X is the solution found by the algorithm, P[.] is the projection
+   operator onto [l,u] and G(.) is the gradient of the objective function;
 - 'get_it', which returns the number of iterations;
 - 'get_inner_it', which returns the number of inner conjugate gradient
    iterations;

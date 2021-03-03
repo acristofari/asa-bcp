@@ -1,35 +1,32 @@
 // -------------------------------------------------------------------------
-//
+// 
 // This file is part of ASA-BCP, which is a solver for bound-constrained
 // optimization problems of the following form:
-//
-//                                 min f(x)
+// 
+//                                min f(x)
 //                           s.t. l <= x <= u
-//
-// with f(x) twice continuously differentiable.
-//
+// 
+// where f(x) is a twice continuously differentiable.
+// 
 // -------------------------------------------------------------------------
-//
+// 
 // Reference paper:
-//
+// 
 // A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
 // Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 // Optimization Theory and Applications, 172(2), 369-401.
-//
+// 
 // -------------------------------------------------------------------------
-//
+// 
 // Authors:
 // Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
 // Marianna De Santis (e-mail: mdesantis@diag.uniroma1.it)
 // Stefano Lucidi (e-mail: lucidi@diag.uniroma1.it)
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
-//
+// 
 // Last update of this file:
-// June 5th, 2020
-//
-// Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
-// Stefano Lucidi, Francesco Rinaldi.
-//
+// March 3rd, 2021
+// 
 // Licensing:
 // This file is part of ASA-BCP.
 // ASA-BCP is free software: you can redistribute it and/or modify
@@ -42,7 +39,10 @@
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
-//
+// 
+// Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+// Stefano Lucidi, Francesco Rinaldi.
+// 
 // -------------------------------------------------------------------------
 
 

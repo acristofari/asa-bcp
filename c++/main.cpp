@@ -1,38 +1,32 @@
 // -------------------------------------------------------------------------
-//
+// 
 // This file is part of ASA-BCP, which is a solver for bound-constrained
 // optimization problems of the following form:
-//
-//                                 min f(x)
+// 
+//                                min f(x)
 //                           s.t. l <= x <= u
-//
-// with f(x) twice continuously differentiable.
-//
-// This is a driver for running ASA-BCP on user-defined problems.
-// See the file 'README.txt' to know how to run the program.
-//
+// 
+// where f(x) is a twice continuously differentiable.
+// 
 // -------------------------------------------------------------------------
-//
+// 
 // Reference paper:
-//
+// 
 // A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
 // Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 // Optimization Theory and Applications, 172(2), 369-401.
-//
+// 
 // -------------------------------------------------------------------------
-//
+// 
 // Authors:
 // Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
 // Marianna De Santis (e-mail: mdesantis@diag.uniroma1.it)
 // Stefano Lucidi (e-mail: lucidi@diag.uniroma1.it)
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
-//
+// 
 // Last update of this file:
-// December 18th, 2020
-//
-// Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
-// Stefano Lucidi, Francesco Rinaldi.
-//
+// March 3rd, 2021
+// 
 // Licensing:
 // This file is part of ASA-BCP.
 // ASA-BCP is free software: you can redistribute it and/or modify
@@ -45,7 +39,10 @@
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
-//
+// 
+// Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+// Stefano Lucidi, Francesco Rinaldi.
+// 
 // -------------------------------------------------------------------------
 
 
@@ -55,6 +52,8 @@
 #include <time.h>
 #include <vector>
 #include <algorithm>
+
+// In this file, we show how to call ASA-BCP to solve a user-defined problem.
 
 int main() {
 
@@ -66,21 +65,21 @@ int main() {
     std::ios_base::sync_with_stdio(false);
     std::cout.precision(15);
 
-    // build an object of type Problem
+    // (1) Build an object of type Problem
     Problem p(status);
 
-    // check if an error occurred when calling the Problem constructor
-    // (something went wrong if 'status' > 0)
+    // (2) Check if an error occurred when calling the Problem constructor
+    //     (something went wrong if 'status' > 0)
     if (status > 0) {
         std::cout << "\nerror when calling the Problem constructor\n";
         return 1;
     }
 
-    // build an object of type Asa_bcp
+    // (3) Build an object of type Asa_bcp
     Asa_bcp alg(status,&p);
     
-    // check if an error occurred when calling the Asa_bcp constructor
-    // (something went wrong if 'status' > 0)
+    // (4) Check if an error occurred when calling the Asa_bcp constructor
+    //     (something went wrong if 'status' > 0)
     if (status > 0) {
         std::cout << "\nerror when calling the Asa_bcp constructor\n";
         return 1;
@@ -88,25 +87,25 @@ int main() {
 
     // ------------------------------------------------------------------------------------------------------------
     // *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-    // (see the description of Asa_bcp in the file 'asa_bcp.cpp' to know which parameters can be changed and their
+    // (see the description of Asa_bcp in the file 'syntax.txt' to know which parameters can be changed and their
     // default values)
     //
-    // Instead of creating the object 'alg' by the above instruction 'Asa_bcp alg(status,&p);', do the following:
+    // Instead of creating the above object 'alg', do the following:
     //
-    // (1) create an object of structure type asa_bcp_options (see its declaration in file 'asa_bcp.h'), e.g.,:
+    // - create an object of structure type asa_bcp_options (see its declaration in file 'asa_bcp.h'), e.g.,
     //
-    //       asa_bcp_options opts;
+    //     asa_bcp_options opts;
     //
-    // (2) assign new values to (some of) the members of the new structure object, e.g.,:
+    // - assign new values to (some of) the members of the new structure object, e.g.,
     //
-    //       opts.verbosity = 0;
+    //     opts.verbosity = 0;
     //
-    // (3) pass the address of the structure object as third input argument when calling the Asa_bcp constructor, e.g.,:
+    // - pass the address of the structure object as third input argument of the Asa_bcp constructor, e.g.,
     //
-    //       Asa_bcp alg(status,&p,&opts);
+    //     Asa_bcp alg(status,&p,&opts);
     // ------------------------------------------------------------------------------------------------------------
 
-    // call the solver
+    // (5) Call the solver
     t_start = clock();
     alg.solve();
     t_end = clock();
