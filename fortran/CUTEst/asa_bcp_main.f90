@@ -3,13 +3,10 @@
 ! This file is part of ASA-BCP, which is a solver for bound-constrained
 ! optimization problems of the following form:
 !
-!                                 min f(x)
+!                                min f(x)
 !                           s.t. l <= x <= u
 !
-! with f(x) twice continuously differentiable.
-!
-! This is a driver for running ASA-BCP on CUTEst problems.
-! See the file 'README.txt' to know how to run the program.
+! where f(x) is a twice continuously differentiable.
 !
 ! -------------------------------------------------------------------------
 !
@@ -19,7 +16,7 @@
 ! Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 ! Optimization Theory and Applications, 172(2), 369-401.
 !
-! -------------------------------------------------------------------------
+!-------------------------------------------------------------------------
 !
 ! Authors:
 ! Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
@@ -28,10 +25,7 @@
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 !
 ! Last update of this file:
-! December 18th, 2020
-!
-! Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
-! Stefano Lucidi, Francesco Rinaldi.
+! March 3rd, 2021
 !
 ! Licensing:
 ! This file is part of ASA-BCP.
@@ -45,6 +39,9 @@
 ! GNU General Public License for more details.
 ! You should have received a copy of the GNU General Public License
 ! along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
+!
+! Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+! Stefano Lucidi, Francesco Rinaldi.
 !
 ! -------------------------------------------------------------------------
 
@@ -63,11 +60,14 @@ program asa_bcp_main
     character(len=10) :: pname
     type(asa_bcp_options) :: opts
     
-    ! open problem file
+    ! This is a driver for running ASA-BCP on CUTEst problems.
+    ! See the file 'README.txt' to know how to run the program.
+    
+    ! (1) Open problem file
     open(input,file='OUTSDIF.d',form='FORMATTED',status='OLD')
     rewind input
     
-    ! check if the problem has only bound constraints
+    ! (2) Check if the problem has only bound constraints
     call CUTEST_cdimen(status,input,n,m)
     if (status.ne.0) goto 910
     if (m.gt.0) then
@@ -78,20 +78,20 @@ program asa_bcp_main
         stop
     endif
     
-    ! set up SIF data from the problem file
+    ! (3) Set up SIF data from the problem file
     allocate(x(n),lb(n),ub(n))
     call CUTEST_usetup(status,input,out,io_buffer,n,x,lb,ub)
     if (status.ne.0) then
         goto 910
     endif
         
-    ! get problem name
+    ! (4) Get problem name
     call CUTEST_pname(status,input,pname)
     if (status.ne.0) then
         goto 910
     endif
     
-    ! call the solver
+    ! (5) Call ASA-BCP
     opts%verbosity = 0 ! to suppress verbosity
     call cpu_time(time_start)
     call asa_bcp(n,x,f,lb,ub,opts,flag)

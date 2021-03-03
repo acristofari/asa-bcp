@@ -3,8 +3,8 @@
 _Active-Set Algorithm for Box-Constrained Problems_ (ASA-BCP) is a solver for bound-constrained
 optimization problems of the following form:
 
-    min f(x)
-    l <= x <= u
+         min f(x)
+    s.t. l <= x <= u
 
 where _f(x)_ is a twice continuously differentiable function.
 
@@ -21,6 +21,22 @@ Journal of Optimization Theory and Applications, 172(2), 369-401.](https://link.
 * Marianna De Santis (e-mail: [mdesantis@diag.uniroma1.it](mailto:mdesantis@diag.uniroma1.it))
 * Stefano Lucidi (e-mail: [lucidi@diag.uniroma1.it](mailto:lucidi@diag.uniroma1.it))
 * Francesco Rinaldi (e-mail: [rinaldi@math.unipd.it](mailto:rinaldi@math.unipd.it))
+
+## Licensing:
+
+ASA-BCP is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ASA-BCP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
+
+Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+Stefano Lucidi, Francesco Rinaldi.
 
 ## How to run ASA-BCP on CUTEst problems (for Linux system)
 
@@ -53,6 +69,5 @@ packages to your computer and have installed all correctly.
 
    where `problem_name` is the CUTEst problem to solve.
 
-   See the file `syntax.txt` in the parent directory and the file
-   `asa_bcp_main.f90` to know how to change algorithm parameters and get
-   output values.
+   See the file `syntax.txt` in the parent directory to know how to change
+   algorithm parameters and get output values.
