@@ -12,22 +12,21 @@ Input arguments:
   Hessian-vector products can even be approximated by setting the
   parameter 'hd_exact' to false and, in this case, function 'hd_prod' can
   be omitted);
-- X0 (required) is the starting point of the algorithm;
+- X0 (required) is the starting point;
 - L (required) is the lower bound on the variables;
 - U (required) is the upper bound on the variables;
-- OPTS (optional) is a structure containing the values of some algorithm
-  parameters (see below).
+- OPTS (optional) is a structure with algorithm parameters (see below).
 
-  See the file 'problem.m' to know input/output arguments of 'funct',
-  'grad' and 'hd_prod'.
+See the file 'problem.m' to know input/output arguments of 'funct', 'grad'
+and 'hd_prod'.
 
 Output arguments:
-- X is the solution found by the algorithm;
-- F is the objective value at the solution found by the algorithm
+- X is the final solution found by the algorithm;
+- F is the objective value at X;
 - ASA_BCP_INFO is a structure containing other output values:
-  ASA_BCP_INFO.sup_norm_proj_g is the sup-norm of X - P[X-G(X)], where X
-  is the solution found by the algorithm, P[.] is the projection operator
-  onto [L,U] and G(.) is the gradient of the objective function;
+  ASA_BCP_INFO.sup_norm_proj_g is the sup-norm of X - P[X-G(X)], where
+  P[.] is the projection operator onto [L,U] and G(.) is the gradient of
+  the objective function;
   ASA_BCP_INFO.it is the number of iterations;
   ASA_BCP_INFO.inner_it is the number of inner conjugate gradient
   iterations;
@@ -62,9 +61,9 @@ Output arguments:
 
 To change the values of the above parameters 'eps_opt', 'min_gd',
 'min_proj_d', 'min_stepsize', 'max_it', 'max_n_f', 'max_n_g', 'max_n_hd'
-and 'min_f', use the structure OPTS (it is one of the input arguments, see
-above), which must have as field names the names of the parameters to be
-changed.
+and 'min_f', use the structure OPTS (it is one of the input arguments of
+ASA_BCP, see above), having as field names the names of the parameters
+to be changed.
 Other parameters that can be changed in the same way are the following:
 - 'm': history length for the computation of the reference value in the
        line search: set 'm' > 1 for non-monotone line search, or 'm' = 1

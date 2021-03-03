@@ -1,38 +1,32 @@
 % -------------------------------------------------------------------------
-%
+% 
 % This file is part of ASA-BCP, which is a solver for bound-constrained
 % optimization problems of the following form:
-%
-%                                 min f(x)
+% 
+%                                min f(x)
 %                           s.t. l <= x <= u
-%
-% with f(x) twice continuously differentiable.
-%
-% This is a driver for running ASA-BCP on user-defined problems.
-% See the file 'README.txt' to know how to run the program.
-%
+% 
+% where f(x) is a twice continuously differentiable.
+% 
 % -------------------------------------------------------------------------
-%
+% 
 % Reference paper:
-%
+% 
 % A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
 % Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 % Optimization Theory and Applications, 172(2), 369-401.
-%
+% 
 % -------------------------------------------------------------------------
-%
+% 
 % Authors:
 % Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
 % Marianna De Santis (e-mail: mdesantis@diag.uniroma1.it)
 % Stefano Lucidi (e-mail: lucidi@diag.uniroma1.it)
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
-%
+% 
 % Last update of this file:
-% December 18th, 2020
-%
-% Copyright 2017-2020 Andrea Cristofari, Marianna De Santis,
-% Stefano Lucidi, Francesco Rinaldi.
-%
+% March 3rd, 2021
+% 
 % Licensing:
 % This file is part of ASA-BCP.
 % ASA-BCP is free software: you can redistribute it and/or modify
@@ -45,35 +39,40 @@
 % GNU General Public License for more details.
 % You should have received a copy of the GNU General Public License
 % along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
-%
+% 
+% Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+% Stefano Lucidi, Francesco Rinaldi.
+% 
 % -------------------------------------------------------------------------
 
-clear all, clc
 
-% load the problem
+clear all, clc;
+
+% In this file, we show how to call ASA-BCP to solve a user-defined problem.
+
+% (1) Load the problem
 [n,obj.funct,obj.grad,obj.hd_prod,l,u,x0] = problem();
 
-% call the solver
+% (2) Call ASA-BCP
 t_start = tic;
 [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u);
 t_tot = toc(t_start);
 
 %--------------------------------------------------------------------------
 % *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-% (see the description of asa_bcp in the file 'asa_bcp.m' to know which 
-% parameters can be changed and their default values)
+% (see the file 'syntax.txt' to know which parameters can be changed and
+% their default values)
 %
-% Instead of calling the solver by the above instruction
-% '[x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u);', do the following:
+% Instead of calling ASA-BCP by the above instruction, do the following:
 %
-% (1) create a structure having as field names the names of the parameters
-%     to be changed and assign them new values, e.g.,:
+% - create a structure having as field names the names of the parameters
+%   to be changed and assign them new values, e.g.,
 %
-%       opts.verbosity = 0;
+%     opts.verbosity = 0;
 %
-% (2) pass the structure to 'asa_bcp' as fifth input argument, e.g.,:
+% - pass the structure to ASA-BCP as fifth input argument, e.g.,
 %
-%       [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u,opts);
+%     [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u,opts);
 %--------------------------------------------------------------------------
 
 % write statistics to the screen and to file 'statistics.txt'
