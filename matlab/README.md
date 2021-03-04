@@ -1,4 +1,4 @@
-# ASA-BCP
+# Active-Set Algorithm for Box-Constrained Problems (ASA-BCP)
 
 _Active-Set Algorithm for Box-Constrained Problems_ (ASA-BCP) is a solver for bound-constrained
 optimization problems of the following form:
