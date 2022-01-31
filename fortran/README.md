@@ -35,7 +35,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
 
-Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 Stefano Lucidi, Francesco Rinaldi.
 
 ## How to use ASA-BCP (Fortran implementation)
