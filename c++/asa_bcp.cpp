@@ -25,7 +25,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 // 
 // Last update of this file:
-// March 3rd, 2021
+// January 31st, 2022
 // 
 // Licensing:
 // This file is part of ASA-BCP.
@@ -40,7 +40,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
 // 
-// Copyright 2017-2021 Andrea Cristofari, Marianna De Santis,
+// Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 // Stefano Lucidi, Francesco Rinaldi.
 // 
 // -------------------------------------------------------------------------
@@ -62,7 +62,8 @@ Asa_bcp::Asa_bcp(unsigned short int& status, Problem* p, const asa_bcp_options* 
     unsigned short int prob_status = 0;
 
     if (opts == NULL) {
-        opts = new asa_bcp_options();
+        asa_bcp_options asa_bcp_opts;
+        opts = &asa_bcp_opts;
     }
 
     eps_opt = opts->eps_opt;
