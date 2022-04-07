@@ -6,7 +6,7 @@ optimization problems of the following form:
          min f(x)
     s.t. l <= x <= u
 
-where _f(x)_ is a twice continuously differentiable function.
+with given vectors _l, u_ and where _f(x)_ is a twice continuously differentiable function.
 
 ASA-BCP combines an active-set strategy with a truncated-Newton search direction and a non-monotone line search.
 
@@ -69,5 +69,5 @@ packages to your computer and have installed all correctly.
 
    where `problem_name` is the CUTEst problem to solve.
 
-   See the file `syntax.txt` in the parent directory to know how to change
+   See the file `usage.txt` in the parent directory to know how to change
    algorithm parameters and get output values.

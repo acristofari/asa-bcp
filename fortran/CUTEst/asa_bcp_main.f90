@@ -1,32 +1,33 @@
 ! -------------------------------------------------------------------------
-!
+! 
 ! This file is part of ASA-BCP, which is a solver for bound-constrained
 ! optimization problems of the following form:
-!
+! 
 !                                min f(x)
 !                           s.t. l <= x <= u
-!
-! where f(x) is a twice continuously differentiable.
-!
+! 
+! with given vectors l, u and where f(x) is a twice continuously
+! differentiable function.
+! 
 ! -------------------------------------------------------------------------
-!
+! 
 ! Reference paper:
-!
+! 
 ! A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
 ! Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 ! Optimization Theory and Applications, 172(2), 369-401.
-!
-!-------------------------------------------------------------------------
-!
+! 
+! -------------------------------------------------------------------------
+! 
 ! Authors:
 ! Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
 ! Marianna De Santis (e-mail: mdesantis@diag.uniroma1.it)
 ! Stefano Lucidi (e-mail: lucidi@diag.uniroma1.it)
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
-!
+! 
 ! Last update of this file:
-! January 31st, 2022
-!
+! April 7th, 2022
+! 
 ! Licensing:
 ! This file is part of ASA-BCP.
 ! ASA-BCP is free software: you can redistribute it and/or modify
@@ -39,10 +40,10 @@
 ! GNU General Public License for more details.
 ! You should have received a copy of the GNU General Public License
 ! along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
-!
+! 
 ! Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 ! Stefano Lucidi, Francesco Rinaldi.
-!
+! 
 ! -------------------------------------------------------------------------
 
 
@@ -56,12 +57,11 @@ program asa_bcp_main
     integer, parameter :: input=47,io_buffer=11,out=6
     double precision :: f,sup_norm_proj_g
     double precision, dimension(:), allocatable :: x,lb,ub
-    real :: time_start,time_end,elap_time
     character(len=10) :: pname
     type(asa_bcp_options) :: opts
     
     ! This is a driver for running ASA-BCP on CUTEst problems.
-    ! See the file 'README.txt' to know how to run the program.
+    ! See the file 'README.md' to know how to run the program.
     
     ! (1) Open problem file
     open(input,file='OUTSDIF.d',form='FORMATTED',status='OLD')
@@ -93,12 +93,7 @@ program asa_bcp_main
     
     ! (5) Call ASA-BCP
     opts%verbosity = 0 ! to suppress verbosity
-    call cpu_time(time_start)
     call asa_bcp(n,x,f,lb,ub,opts,flag)
-    call cpu_time(time_end)
-    
-    ! compute the elapsed time
-    elap_time = amax1(time_end-time_start,0.e0)
     
     ! get statistics
     call get_sup_norm_proj_g(sup_norm_proj_g)
@@ -110,8 +105,8 @@ program asa_bcp_main
     
     ! write statistics to the screen and to the file 'statistics.txt'
     open(11,file='statistics.txt')
-    write(*,200) pname,n,f,sup_norm_proj_g,it,n_f,n_g,n_hd,inner_it,flag,elap_time
-    write(11,200) pname,n,f,sup_norm_proj_g,it,n_f,n_g,n_hd,inner_it,flag,elap_time
+    write(*,200) pname,n,f,sup_norm_proj_g,it,n_f,n_g,n_hd,inner_it,flag
+    write(11,200) pname,n,f,sup_norm_proj_g,it,n_f,n_g,n_hd,inner_it,flag
     close(11)
     
     ! write the solution found by the algorithm to the file 'opt_sol.txt'
@@ -145,8 +140,7 @@ program asa_bcp_main
     ' number of gradient evaluations = ', i0, /, &
     ' number of Hessian-vector products = ', i0, /, &
     ' number of inner cg iterations = ', i0, /, &
-    ' exit flag = ', i1, /, &
-    ' elapsed time (s) = ', e12.5, //, 1x, 50('*'))
+    ' exit flag = ', i1, //, 1x, 50('*'))
 
 end program
 
