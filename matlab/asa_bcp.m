@@ -184,42 +184,42 @@ function [x,f,asa_bcp_info] = asa_bcp(obj,x,l,u,opts)
     
     % set objective function, gradient and Hessian-vector product
     struct_field = fieldnames(obj);
-    obj_set = false;
-    grad_set = false;
-    hd_prod_set = false;
+    is_f_set = false;
+    is_g_set = false;
+    is_hd_set = false;
     for i = 1:length(struct_field)
        switch char(struct_field(i))
            case 'funct'
                if (~isa(obj.funct,'function_handle'))
                   error('In the structure passed as first input, ''funct'' must be a function handle.');
                end
-               obj_set = true;
+               is_f_set = true;
            case 'grad'
                if (~isa(obj.grad,'function_handle'))
                   error('In the structure passed as first input, ''grad'' must be a function handle.');
                end
-               grad_set = true;
+               is_g_set = true;
            case 'hd_prod'
                if (~isa(obj.hd_prod,'function_handle'))
                   error('In the structure passed as first input, ''hd_prod'' must be a function handle.');
                end
-               hd_prod_set = true;
+               is_hd_set = true;
            otherwise
                error('Not valid field name in the structure passed as first input.');
        end
     end
-    if (~obj_set)
+    if (~is_f_set)
         error('The objective function must be specified.');
     end
-    if (~grad_set)
+    if (~is_g_set)
         error('The gradient of the objective must be specified.');
     end
-    if (hd_exact && ~hd_prod_set)
+    if (hd_exact && ~is_hd_set)
         error(['The Hessian-vector product must be specified ' ...
-               '(set ''hd_exact'' to false in the options to approximate Hessian-vector products).']);
+               '(or set ''hd_exact'' to false in the options to approximate Hessian-vector products).']);
     end
     
-    clear struct_field obj_set grad_set hd_prod_set
+    clear struct_field is_f_set is_g_set is_hd_set
     
     l_min = -1e20; % no i-th lower bound if l(i) <= l_min
     u_max = 1e20; % no i-th upper bound if u(i) >= u_max
