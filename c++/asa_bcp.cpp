@@ -6,7 +6,8 @@
 //                                min f(x)
 //                           s.t. l <= x <= u
 // 
-// where f(x) is a twice continuously differentiable.
+// with given vectors l, u and where f(x) is a twice continuously
+// differentiable function.
 // 
 // -------------------------------------------------------------------------
 // 
@@ -25,7 +26,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 // 
 // Last update of this file:
-// January 31st, 2022
+// April 7th, 2022
 // 
 // Licensing:
 // This file is part of ASA-BCP.
@@ -42,7 +43,7 @@
 // 
 // Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 // Stefano Lucidi, Francesco Rinaldi.
-// 
+//
 // -------------------------------------------------------------------------
 
 
@@ -75,53 +76,53 @@ Asa_bcp::Asa_bcp(unsigned short int& status, Problem* p, const asa_bcp_options* 
     max_n_g = (unsigned int) opts->max_n_g;
     max_n_hd = (unsigned int) opts->max_n_hd;
     min_f = opts->min_f;
-    m = (unsigned int) opts->m;
+    m = (unsigned int) opts->ls_memory;
     z = (unsigned int) opts->z;
     hd_exact = opts->hd_exact;
     verbosity = (short unsigned int) opts->verbosity;
 
     if (eps_opt < 0e0) {
-        std::cout << "error when calling asa_bcp: 'eps_opt' must be a number greater than or equal to 0\n";
+        std::cout << "In the options, 'eps_opt' must be a non-negative number.\n";
         exit(-1);
     }
-    if (min_gd < 0e0) {
-        std::cout << "error when calling asa_bcp: 'min_gd' must be a number greater than or equal to 0\n";
-        exit(-1);
-    }
-    if (min_norm_proj_d < 0e0) {
-        std::cout << "error when calling asa_bcp: 'min_norm_proj_d' must be a number greater than or equal to 0\n";
-        exit(-1);
-    }
-    if (min_stepsize < 0e0) {
-        std::cout << "error when calling asa_bcp: 'min_stepsize' must be a number greater than or equal to 0\n";
-        exit(-1);
-    }
-    if (opts->max_it < 0) {
-        std::cout << "error when calling asa_bcp: 'max_it' must be a number greater than or equal to 0\n";
+    if (opts->max_it < 1) {
+        std::cout << "In the options, 'max_it' must be a number greater than or equal to 1.\n";
         exit(-1);
     }
     if (opts->max_n_f < 1) {
-        std::cout << "error when calling asa_bcp: 'max_n_f' must be a number greater than or equal to 1\n";
+        std::cout << "In the options, 'max_n_f' must be a number greater than or equal to 1.\n";
         exit(-1);
     }
     if (opts->max_n_g < 1) {
-        std::cout << "error when calling asa_bcp: 'max_n_g' must be a number greater than or equal to 1\n";
+        std::cout << "In the options, 'max_n_g' must bea number greater than or equal to 1.\n";
         exit(-1);
     }
     if (opts->max_n_hd < 0) {
-        std::cout << "error when calling asa_bcp: 'max_n_hd' must be a number greater than or equal to 0\n";
+        std::cout << "In the options, 'max_n_hd' must bea number greater than or equal to 0.\n";
         exit(-1);
     }
-    if (opts->m < 1) {
-        std::cout << "error when calling asa_bcp: 'm' must be a number greater than or equal to 1\n";
+    if (min_gd < 0e0) {
+        std::cout << "In the options, 'min_gd' must be a non-negative number.\n";
         exit(-1);
     }
-    if (opts->z < 1) {
-        std::cout << "error when calling asa_bcp: 'z' must be a number greater than or equal to 1\n";
+    if (min_norm_proj_d < 0e0) {
+        std::cout << "In the options, 'min_norm_proj_d' must be a non-negative number.\n";
+        exit(-1);
+    }
+    if (min_stepsize < 0e0) {
+        std::cout << "In the options, 'min_stepsize' must be a non-negative number.\n";
+        exit(-1);
+    }
+    if (opts->ls_memory < 1) {
+        std::cout << "In the options, 'ls_memory' must be a number greater than or equal to 1.\n";
+        exit(-1);
+    }
+    if (opts->z < 0) {
+        std::cout << "In the options, 'z' must be a non-negative number.\n";
         exit(-1);
     }
     if (opts->verbosity < 0) {
-        std::cout << "error when calling asa_bcp: 'verbosity' must be a number between 0 and 2\n";
+        std::cout << "In the options, 'verbosity' must be a number between 0 and 2.\n";
         exit(-1);
     }
 

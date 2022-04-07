@@ -6,7 +6,8 @@
 //                                min f(x)
 //                           s.t. l <= x <= u
 // 
-// where f(x) is a twice continuously differentiable.
+// with given vectors l, u and where f(x) is a twice continuously
+// differentiable function.
 // 
 // -------------------------------------------------------------------------
 // 
@@ -25,7 +26,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 // 
 // Last update of this file:
-// January 31st, 2022
+// April 7th, 2022
 // 
 // Licensing:
 // This file is part of ASA-BCP.
@@ -42,25 +43,22 @@
 // 
 // Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 // Stefano Lucidi, Francesco Rinaldi.
-// 
+//
 // -------------------------------------------------------------------------
 
 
 #include "problem.h"
 #include "asa_bcp.h"
 #include <iostream>
-#include <time.h>
 #include <vector>
 #include <algorithm>
 
-// In this file, we show how to call ASA-BCP to solve a user-defined problem.
+// In this file, it is shown how to call ASA-BCP to solve a user-defined problem
 
 int main() {
 
     unsigned short int status;
-    float elap_time;
     std::ofstream file_stats,file_opt_sol;
-    clock_t t_start,t_end;
 
     std::ios_base::sync_with_stdio(false);
     std::cout.precision(15);
@@ -69,9 +67,8 @@ int main() {
     Problem p(status);
 
     // (2) Check if an error occurred when calling the Problem constructor
-    //     (something went wrong if 'status' > 0)
     if (status > 0) {
-        std::cout << "\nerror when calling the Problem constructor\n";
+        std::cout << "\nSomething went wrong when calling the Problem constructor.\n";
         return 1;
     }
 
@@ -79,15 +76,14 @@ int main() {
     Asa_bcp alg(status,&p);
     
     // (4) Check if an error occurred when calling the Asa_bcp constructor
-    //     (something went wrong if 'status' > 0)
     if (status > 0) {
-        std::cout << "\nerror when calling the Asa_bcp constructor\n";
+        std::cout << "\nSomething went wrong when calling the Asa_bcp constructor.\n";
         return 1;
     }
 
     // ------------------------------------------------------------------------------------------------------------
     // *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-    // (see the description of Asa_bcp in the file 'syntax.txt' to know which parameters can be changed and their
+    // (see the description of Asa_bcp in the file 'usage.txt' to know which parameters can be changed and their
     // default values)
     //
     // Instead of creating the above object 'alg', do the following:
@@ -106,12 +102,7 @@ int main() {
     // ------------------------------------------------------------------------------------------------------------
 
     // (5) Call the solver
-    t_start = clock();
     alg.solve();
-    t_end = clock();
-
-    // compute the elapsed time
-    elap_time = std::max((float)(t_end-t_start)/CLOCKS_PER_SEC,(float)0e0);
 
     // write statistics to the screen and to file 'statistics.txt'
     file_stats.open("statistics.txt",std::ios::trunc);
@@ -135,7 +126,6 @@ int main() {
               << "\nnumber of Hessian-vector products = " << alg.get_n_hd() 
               << "\nnumber inner cg iterations = " << alg.get_inner_it()
               << "\nexit flag = " << alg.get_flag()
-              << "\nelapsed time (s) = " << elap_time
               << "\n\n************************************************\n";
     file_stats << "************************************************"
                << "\n\nAlgorithm: ASA-BCP"
@@ -148,7 +138,6 @@ int main() {
                << "\nnumber of Hessian-vector products = " << alg.get_n_hd() 
                << "\nnumber inner cg iterations = " << alg.get_inner_it()
                << "\nexit flag = " << alg.get_flag()
-               << "\nelapsed time (s) = " << elap_time
                << "\n\n************************************************\n";
     file_stats.close();
 

@@ -20,7 +20,7 @@ struct asa_bcp_options {
     // DEFAULT VALUES OF ASA-BCP PARAMETERS
     // ====================================
 
-    // PARAMETERS FOR TERMINATION (see the description of ASA_BCP in file 'asa_bcp.cpp')
+    // PARAMETERS FOR TERMINATION
     double eps_opt = 1e-5;
     double min_gd = 1e-15;
     double min_norm_proj_d = 1e-9;
@@ -31,8 +31,8 @@ struct asa_bcp_options {
     int max_n_g = 1000000;
     int max_n_hd = 1000000;
 
-    // OTHER ALGORITHM PARAMETERS (see the description of ASA_BCP in file 'asa_bcp.cpp')
-    int m = 100;
+    // OTHER ALGORITHM PARAMETERS
+    int ls_memory = 100;
     int z = 20;
     bool hd_exact = true;
     short int verbosity = 1;

@@ -6,7 +6,7 @@ optimization problems of the following form:
          min f(x)
     s.t. l <= x <= u
 
-where _f(x)_ is a twice continuously differentiable function.
+with given vectors _l, u_ and where _f(x)_ is a twice continuously differentiable function.
 
 ASA-BCP combines an active-set strategy with a truncated-Newton search direction and a non-monotone line search.
 
@@ -49,12 +49,12 @@ Stefano Lucidi, Francesco Rinaldi.
     * `README.md`,
     * `syntax.txt`.
 
-2. See the file `syntax.txt` to know how to call ASA-BCP, change
+2. See the file `usage.txt` to know how to call ASA-BCP in C++, change
    algorithm parameters and get output values.
 
-3. See the files `main.cpp` and `problem.cpp` for an example. To run the
-   example, first create the executable file by compiling `asa_bcp.cpp`,
-   `main.cpp` and `problem.cpp`, and then run the executable file. The
-   solution found by the algorithm will be reported in the file
+3. See the files `main.cpp` and `problem.cpp` for an example.
+   To run the example, first create the executable file by compiling `asa_bcp.cpp`,
+   `main.cpp` and `problem.cpp`, then run the executable file.
+   The solution found by the algorithm will be reported in the file
    `opt_sol.txt` and the final statistics will be reported in the file
    `statistics.txt`.
