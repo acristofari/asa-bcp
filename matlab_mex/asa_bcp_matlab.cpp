@@ -141,7 +141,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     p.set_starting_point(prhs[1]); // set starting point
     p.set_bounds(prhs[2],prhs[3]); // set bounds
 
-    // get options
+    // set options
     asa_bcp_options opts;
     if (nrhs > 4) {
         if (!mxIsStruct(prhs[4]) || mxGetNumberOfElements(prhs[4])>1) {
@@ -227,7 +227,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     if (!is_g_set) {
         mexErrMsgTxt("The gradient of the objective must be specified..");
     }
-    if (hd_exact && ~is_hd_prod_set) {
+    if (opts.hd_exact && ~is_hd_set) {
         mexErrMsgTxt("The Hessian-vector product must be specified (or set 'hd_exact' to false in the options to approximate Hessian-vector products).");
     }
 
