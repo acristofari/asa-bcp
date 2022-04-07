@@ -6,7 +6,7 @@ optimization problems of the following form:
          min f(x)
     s.t. l <= x <= u
 
-where _f(x)_ is a twice continuously differentiable function.
+with given vectors _l, u_ and where _f(x)_ is a twice continuously differentiable function.
 
 ASA-BCP combines an active-set strategy with a truncated-Newton search direction and a non-monotone line search.
 
@@ -47,8 +47,8 @@ plus the following subdirectories:
 * `fortran`, with a Fortran implementation of ASA-BCP and an interface to
   CUTEst;
 * `matlab`, with a Matlab implementation of ASA-BCP (a first way to run
-  ASA-BCP via Matlab);
+  ASA-BCP in Matlab);
 * `matlab_mex`, with a Matlab interface to the C++ implementation of
-  ASA-BCP (a second way to run ASA-BCP via Matlab).
+  ASA-BCP using MEX file (a second way to run ASA-BCP in Matlab).
 
 Each of these subdirectories contains a file `README.md` where it is explained how to use the program.
