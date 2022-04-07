@@ -227,7 +227,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     if (!is_g_set) {
         mexErrMsgTxt("The gradient of the objective must be specified..");
     }
-    if (opts.hd_exact && ~is_hd_set) {
+    if (opts.hd_exact && !is_hd_set) {
         mexErrMsgTxt("The Hessian-vector product must be specified (or set 'hd_exact' to false in the options to approximate Hessian-vector products).");
     }
 
