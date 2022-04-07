@@ -6,7 +6,7 @@
 %                                min f(x)
 %                           s.t. l <= x <= u
 % 
-% where f(x) is a twice continuously differentiable.
+% with given l,u and where f(x) is a twice continuously differentiable.
 % 
 % -------------------------------------------------------------------------
 % 
@@ -25,7 +25,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 % 
 % Last update of this file:
-% January 31st, 2022
+% April 7th, 2022
 % 
 % Licensing:
 % This file is part of ASA-BCP.
@@ -48,19 +48,17 @@
 
 clear all, clc;
 
-% In this file, we show how to call ASA-BCP to solve a user-defined problem.
+% In this file, it is shown how to call ASA-BCP to solve a user-defined problem
 
 % (1) Load the problem
 [n,obj.funct,obj.grad,obj.hd_prod,l,u,x0] = problem();
 
 % (2) Call ASA-BCP
-t_start = tic;
 [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u);
-t_tot = toc(t_start);
 
 %--------------------------------------------------------------------------
 % *** EXAMPLE OF HOW TO CHANGE ASA-BCP PARAMETERS ***
-% (see the file 'syntax.txt' to know which parameters can be changed and
+% (see the file 'usage.txt' to know which parameters can be changed and
 % their default values)
 %
 % Instead of calling ASA-BCP by the above instruction, do the following:
@@ -75,14 +73,9 @@ t_tot = toc(t_start);
 %     [x,f,asa_bcp_info] = asa_bcp(obj,x0,l,u,opts);
 %--------------------------------------------------------------------------
 
-% write statistics to the screen and to file 'statistics.txt'
-fid = fopen('statistics.txt','w');
-if (flag < 0)
-    fprintf(fid,'%s\n','infeasible problem');
-    fclose(fid);
-	return;
-end
-fprintf(['************************************************' ...
+% write some statistics to the screen
+if (flag >= 0)
+    fprintf(['************************************************' ...
          '\n\nAlgorithm: ASA-BCP' ...
          '\n\nnumber of variables = %-i' ...
          '\n\nf = %-.5e' ...
@@ -93,28 +86,9 @@ fprintf(['************************************************' ...
          '\nnumber of Hessian-vector products = %-i' ...
          '\nnumber of inner cg iterations = %-i' ...
          '\nexit flag = %-i' ...
-         '\nelapsed time (s) = %-.4e' ...
          '\n\n************************************************\n'], ...
         n,f,asa_bcp_info.sup_norm_proj_g,asa_bcp_info.it,asa_bcp_info.n_f, ...
-        asa_bcp_info.n_g,asa_bcp_info.n_hd,asa_bcp_info.inner_it,asa_bcp_info.flag,max(t_tot,0e0));
-fprintf(fid,['************************************************' ...
-            '\n\nAlgorithm: ASA-BCP' ...
-            '\n\nnumber of variables = %-i' ...
-            '\n\nf = %-.5e' ...
-            '\n\nsup-norm of the projected gradient = %-.5e' ...
-            '\nnumber of iterations = %-i' ...
-            '\nnumber of function evaluations = %-i' ...
-            '\nnumber of gradient evaluations = %-i' ...
-            '\nnumber of Hessian-vector products = %-i' ...
-            '\nnumber of inner cg iterations = %-i' ...
-            '\nexit flag = %-i' ...
-            '\nelapsed time (s) = %-.4e' ...
-            '\n\n************************************************\n'], ...
-           n,f,asa_bcp_info.sup_norm_proj_g,asa_bcp_info.it,asa_bcp_info.n_f, ...
-           asa_bcp_info.n_g,asa_bcp_info.n_hd,asa_bcp_info.inner_it,asa_bcp_info.flag,max(t_tot,0e0));
-fclose(fid);
-
-% write the solution found by the algorithm to file 'opt_sol.txt'
-fid = fopen('opt_sol.txt','w');
-fprintf(fid,'%-.5e\n',x);
-fclose(fid);
+        asa_bcp_info.n_g,asa_bcp_info.n_hd,asa_bcp_info.inner_it,asa_bcp_info.flag);
+else
+    fprintf('%s\n','infeasible problem');
+end

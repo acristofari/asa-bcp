@@ -6,7 +6,8 @@
 %                                min f(x)
 %                           s.t. l <= x <= u
 % 
-% where f(x) is a twice continuously differentiable.
+% with given vectors l, u and where f(x) is a twice continuously
+% differentiable function.
 % 
 % -------------------------------------------------------------------------
 % 
@@ -25,7 +26,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 % 
 % Last update of this file:
-% January 31st, 2022
+% April 7th, 2022
 % 
 % Licensing:
 % This file is part of ASA-BCP.
@@ -49,129 +50,134 @@
 function [x,f,asa_bcp_info] = asa_bcp(obj,x,l,u,opts)
     
     if (nargin < 4)
-        error('at least four input arguments are required');
+        error('At least four inputs are required.');
     end
     if (nargin > 5)
-        error('at most five input arguments are required');
+        error('At most five inputs are required.');
+    end
+    if (nargout < 1)
+        error('At least one inputs is required.');
+    end
+    if (nargout > 3)
+        error('At most three outputs are required.');
     end
     
     if (~isscalar(obj) || ~isstruct(obj))
-        error('the first input must be a structure');
+        error('The first input must be a structure of function handle elements.');
     end
-    if (~isnumeric(x) || ~isreal(x) || size(x,2)>1)
-        error('the second input must be a column vector');
+    if (~isnumeric(x) || ~isreal(x) || ~iscolumn(x))
+        error('The second input must be a real column vector.');
     end
-    if (~isnumeric(l) || ~isreal(l) || size(l,2)>1)
-        error('the third input must be a column vector');
+    if (~isnumeric(l) || ~isreal(l) || ~iscolumn(l))
+        error('The third input must be a real column vector.');
     end
-    if (~isnumeric(u) || ~isreal(u) || size(u,2)>1)
-        error('the fourth input must be a column vector');
+    if (~isnumeric(u) || ~isreal(u) || ~iscolumn(u))
+        error('The fourth input must be a real column vector.');
     end
     
     n = size(x,1);
     
     if (size(l,1) ~= n)
-        error('lower bound dimension must agree with problem dimension');
+        error('Lower bound dimension and problem dimension must agree.');
     end
     if (size(u,1) ~= n)
-        error('upper bound dimension must agree with problem dimension');
+        error('Upper bound dimension and problem dimension must agree.');
     end
     
     % set parameters
     eps_opt = 1e-5;
-    min_gd = 1e-15;
-    min_norm_proj_d = 1e-9;
-    min_stepsize = 1e-20;
     max_it = 1000000;
     max_n_f = 1000000;
     max_n_g = 1000000;
     max_n_hd = 1000000;
     min_f = -1e90;
+    min_gd = 1e-15;
+    min_norm_proj_d = 1e-9;
+    min_stepsize = 1e-20;
     m = 100;
     z = 20;
     hd_exact = true;
     verbosity = 1;
     if (nargin == 5)
         if (~isscalar(opts) || ~isstruct(opts))
-            error('the third input (which is optional) must be a structure.');
+            error('The fifth input (which is optional) must be a structure.');
         end
         struct_field = fieldnames(opts);
         for i = 1:length(struct_field)
             switch char(struct_field(i))
                 case 'eps_opt'
                     eps_opt = opts.eps_opt;
-                    if (~isscalar(eps_opt) || ~isnumeric(eps_opt) || ~isreal(eps_opt) || eps_opt<=0e0)
-                       error('error when calling asa_bcp: ''eps_opt'' must be greater than or equal to 0.');
-                    end
-                case 'min_gd'
-                    min_gd = opts.min_gd;
-                    if (~isscalar(min_gd) || ~isnumeric(min_gd) || ~isreal(min_gd) || min_gd<0e0)
-                       error('error when calling asa_bcp: ''min_gd'' must be greater than or equal to 0.');
-                    end
-                case 'min_norm_proj_d'
-                    min_norm_proj_d = opts.min_norm_proj_d;
-                    if (~isscalar(min_norm_proj_d) || ~isnumeric(min_norm_proj_d) || ~isreal(min_norm_proj_d) || min_norm_proj_d<0e0)
-                       error('error when calling asa_bcp: ''min_norm_proj_d'' must be greater than or equal to 0.');
-                    end
-                case 'min_stepsize'
-                    min_stepsize = opts.min_stepsize;
-                    if (~isscalar(min_stepsize) || ~isnumeric(min_stepsize) || ~isreal(min_stepsize) || min_stepsize<0e0)
-                       error('error when calling asa_bcp: ''min_stepsize'' must be greater than or equal to 0.');
+                    if (~isscalar(eps_opt) || ~isnumeric(eps_opt) || ~isreal(eps_opt) || eps_opt<0e0)
+                       error('In the options, ''eps_opt'' must be a non-negative number.');
                     end
                 case 'max_it'
                     max_it = opts.max_it;
-                    if (~isscalar(max_it) || ~isnumeric(max_it) || ~isreal(max_it) || max_it<0e0)
-                       error('error when calling asa_bcp: ''max_it'' must be greater than or equal to 0.');
+                    if (~isscalar(max_it) || ~isnumeric(max_it) || ~isreal(max_it) || max_it<1e0)
+                       error('In the options, ''max_it'' must be a number greater than or equal to 1.');
                     end
                     max_it = floor(max_it);
                 case 'max_n_f'
                     max_n_f = opts.max_n_f;
                     if (~isscalar(max_n_f) || ~isnumeric(max_n_f) || ~isreal(max_n_f) || max_n_f<1e0)
-                       error('error when calling asa_bcp: ''max_n_f'' must be greater than or equal to 1.');
+                       error('In the options, ''max_n_f'' must be a number  greater than or equal to 1.');
                     end
                     max_n_f = floor(max_n_f);
                 case 'max_n_g'
                     max_n_g = opts.max_n_g;
                     if (~isscalar(max_n_g) || ~isnumeric(max_n_g) || ~isreal(max_n_g) || max_n_g<1e0)
-                       error('error when calling asa_bcp: ''max_n_g'' must be greater than or equal to 1.');
+                       error('In the options, ''max_n_g'' must bea number  greater than or equal to 1.');
                     end
                     max_n_g = floor(max_n_g);
                 case 'max_n_hd'
                     max_n_hd = opts.max_n_hd;
                     if (~isscalar(max_n_hd) || ~isnumeric(max_n_hd) || ~isreal(max_n_hd) || max_n_hd<0e0)
-                       error('error when calling asa_bcp: ''max_n_hd'' must be greater than or equal to 0.');
+                       error('In the options, ''max_n_hd'' must bea number  greater than or equal to 0.');
                     end
                     max_n_hd = floor(max_n_hd);
                 case 'min_f'
                     min_f = opts.min_f;
                     if (~isscalar(min_f) || ~isnumeric(min_f) || ~isreal(min_f))
-                       error('error when calling asa_bcp: ''min_f'' must be a real number.');
+                       error('In the options, ''min_f'' must be a real number.');
                     end
-                case 'm'
-                    m = opts.m;
-                    if (~isscalar(m) || ~isnumeric(m) || ~isreal(m) || m<0e0)
-                       error('error when calling asa_bcp: ''m'' must be greater than or equal to 0.');
+                case 'min_gd'
+                    min_gd = opts.min_gd;
+                    if (~isscalar(min_gd) || ~isnumeric(min_gd) || ~isreal(min_gd) || min_gd<0e0)
+                       error('In the options, ''min_gd'' must be a non-negative number.');
+                    end
+                case 'min_norm_proj_d'
+                    min_norm_proj_d = opts.min_norm_proj_d;
+                    if (~isscalar(min_norm_proj_d) || ~isnumeric(min_norm_proj_d) || ~isreal(min_norm_proj_d) || min_norm_proj_d<0e0)
+                       error('In the options, ''min_norm_proj_d'' must be a non-negative number.');
+                    end
+                case 'min_stepsize'
+                    min_stepsize = opts.min_stepsize;
+                    if (~isscalar(min_stepsize) || ~isnumeric(min_stepsize) || ~isreal(min_stepsize) || min_stepsize<0e0)
+                       error('In the options, ''min_stepsize'' must be a non-negative number.');
+                    end
+                case 'ls_memory'
+                    m = opts.ls_memory;
+                    if (~isscalar(m) || m<1e0 || ~isnumeric(m) || ~isreal(m))
+                       error('In the options, ''ls_memory'' must be a number greater than or equal to 1.');
                     end
                     m = floor(m);
                 case 'z'
                     z = opts.mm;
                     if (~isscalar(z) || ~isnumeric(z) || ~isreal(z) || z<0e0)
-                       error('error when calling asa_bcp: ''z'' must be greater than or equal to 0.');
+                       error('In the options, ''z'' must be a non-negative number.');
                     end
                     z = floor(z);
                 case 'hd_exact'
                     hd_exact = opts.hd_exact;
                     if (~isscalar(hd_exact) || ~islogical(hd_exact))
-                       error('error when calling asa_bcp: ''hd_exact)'' must be a logical value.');
+                       error('In the options, ''hd_exact'' must be a logical.');
                     end
                 case 'verbosity'
                     verbosity = opts.verbosity;
                     if (~isscalar(verbosity) || ~isnumeric(verbosity) || ~isreal(verbosity) || verbosity<0e0)
-                       error('error when calling asa_bcp: ''verbosity'' must be between 0 and 2.');
+                       error('In the options, ''verbosity'' must be a number between 0 and 2.');
                     end
                 otherwise
-                    error(['error when calling asa_bcp: in the fifth input argument (which is optional), ' ...
-                        '''' char(struct_field(i)) ''' is not a valid field name.']);
+                    error('Not valid field name in the structure of options.');
             end
         end
     end
@@ -185,32 +191,32 @@ function [x,f,asa_bcp_info] = asa_bcp(obj,x,l,u,opts)
        switch char(struct_field(i))
            case 'funct'
                if (~isa(obj.funct,'function_handle'))
-                  error('error when calling asa_bcp: obj.funct must be a function handle.');
+                  error('In the structure passed as first input, ''funct'' must be a function handle.');
                end
                obj_set = true;
            case 'grad'
                if (~isa(obj.grad,'function_handle'))
-                  error('error when calling asa_bcp: obj.grad must be a function handle.');
+                  error('In the structure passed as first input, ''grad'' must be a function handle.');
                end
                grad_set = true;
            case 'hd_prod'
                if (~isa(obj.hd_prod,'function_handle'))
-                  error('error when calling asa_bcp: obj.hd_prod must be a function handle.');
+                  error('In the structure passed as first input, ''hd_prod'' must be a function handle.');
                end
                hd_prod_set = true;
            otherwise
-               error(['error when calling asa_bcp: in the first input argument, ''' char(struct_field(i)) ''' is not a valid field name.']);
+               error('Not valid field name in the structure passed as first input.');
        end
     end
     if (~obj_set)
-        error('error when calling asa_bcp: the objective function must be specified.');
+        error('The objective function must be specified.');
     end
     if (~grad_set)
-        error('error when calling asa_bcp: the gradient of the objective must be specified.');
+        error('The gradient of the objective must be specified.');
     end
     if (hd_exact && ~hd_prod_set)
-        error(['error when calling asa_bcp: the Hessian-vector product must be specified ' ...
-               '(set opts.hd_exact to false for approximating Hessian-vector products).']);
+        error(['The Hessian-vector product must be specified ' ...
+               '(set ''hd_exact'' to false in the options to approximate Hessian-vector products).']);
     end
     
     clear struct_field obj_set grad_set hd_prod_set
