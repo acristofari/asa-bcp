@@ -1,32 +1,33 @@
 ! -------------------------------------------------------------------------
-!
+! 
 ! This file is part of ASA-BCP, which is a solver for bound-constrained
 ! optimization problems of the following form:
-!
+! 
 !                                min f(x)
 !                           s.t. l <= x <= u
-!
-! where f(x) is a twice continuously differentiable.
-!
+! 
+! with given vectors l, u and where f(x) is a twice continuously
+! differentiable function.
+! 
 ! -------------------------------------------------------------------------
-!
+! 
 ! Reference paper:
-!
+! 
 ! A. Cristofari, M. De Santis, S. Lucidi, F. Rinaldi (2017). A Two-Stage
 ! Active-Set Algorithm for Bound-Constrained Optimization. Journal of
 ! Optimization Theory and Applications, 172(2), 369-401.
-!
-!-------------------------------------------------------------------------
-!
+! 
+! -------------------------------------------------------------------------
+! 
 ! Authors:
 ! Andrea Cristofari (e-mail: andrea.cristofari@unipd.it)
 ! Marianna De Santis (e-mail: mdesantis@diag.uniroma1.it)
 ! Stefano Lucidi (e-mail: lucidi@diag.uniroma1.it)
 ! Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
-!
+! 
 ! Last update of this file:
-! January 31st, 2022
-!
+! April 7th, 2022
+! 
 ! Licensing:
 ! This file is part of ASA-BCP.
 ! ASA-BCP is free software: you can redistribute it and/or modify
@@ -39,10 +40,10 @@
 ! GNU General Public License for more details.
 ! You should have received a copy of the GNU General Public License
 ! along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
-!
+! 
 ! Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 ! Stefano Lucidi, Francesco Rinaldi.
-!
+! 
 ! -------------------------------------------------------------------------
 
 
@@ -60,13 +61,13 @@ module asa_bcp_opts
         ! to change ASA-BCP parameters, in the main program create an
         ! object of derived data type asa_bcp_options and assign new
         ! values to (some of) its members
-        ! (see file 'asa_bcp_main.f90' for an example).
+        ! (see file 'main.f90' for an example).
 
         ! ====================================
         ! DEFAULT VALUES OF ASA-BCP PARAMETERS
         ! ====================================
 
-        ! PARAMETERS FOR TERMINATION (see the description of ASA_BCP above)
+        ! PARAMETERS FOR TERMINATION
         double precision :: eps_opt = 1.d-5
         double precision :: min_gd = 1.d-15
         double precision :: min_norm_proj_d = 1.d-9
@@ -77,8 +78,8 @@ module asa_bcp_opts
         integer :: max_n_g = 1000000
         integer :: max_n_hd = 1000000
 
-        ! OTHER ALGORITHM PARAMETERS (see the description of ASA_BCP above)
-        integer :: m = 100
+        ! OTHER ALGORITHM PARAMETERS
+        integer :: ls_memory = 100
         integer :: z = 20
         logical :: hd_exact = .true.
         integer :: verbosity = 1
@@ -229,53 +230,53 @@ subroutine asa_bcp(n,x,f,l,u,opts,flag)
     max_n_f = opts%max_n_f
     max_n_g = opts%max_n_g
     max_n_hd = opts%max_n_hd
-    m = opts%m
+    m = opts%ls_memory
     z = opts%z
     hd_exact = opts%hd_exact
     verbosity = opts%verbosity
 
     if (eps_opt.lt.0.d0) then
-        write(*,'(a)') "error when calling asa_bcp: 'eps_opt' must be a number greater than or equal to 0"
+        write(*,'(a)') "In the options, 'eps_opt' must be a non-negative number."
         stop
     endif
-    if (min_gd.lt.0.d0) then
-        write(*,'(a)') "error when calling asa_bcp: 'min_gd' must be a number greater than or equal to 0"
-        stop
-    endif
-    if (min_norm_proj_d.lt.0.d0) then
-        write(*,'(a)') "error when calling asa_bcp: 'min_norm_proj_d' must be a number greater than or equal to 0"
-        stop
-    endif
-    if (min_stepsize.lt.0.d0) then
-        write(*,'(a)') "error when calling asa_bcp: 'min_stepsize' must be a number greater than or equal to 0"
-        stop
-    endif
-    if (max_it.lt.0) then
-        write(*,'(a)') "error when calling asa_bcp: 'max_it' must be a number greater than or equal to 0"
+    if (max_it.lt.1) then
+        write(*,'(a)') "In the options, 'max_it' must be a number greater than or equal to 1."
         stop
     endif
     if (max_n_f.lt.1) then
-        write(*,'(a)') "error when calling asa_bcp: 'max_n_f' must be a number greater than or equal to 1"
+        write(*,'(a)') "In the options, 'max_n_f' must be a number greater than or equal to 1."
         stop
     endif
     if (max_n_g.lt.1) then
-        write(*,'(a)') "error when calling asa_bcp: 'max_n_g' must be a number greater than or equal to 1"
+        write(*,'(a)') "In the options, 'max_n_g' must bea number greater than or equal to 1."
         stop
     endif
     if (max_n_hd.lt.0) then
-        write(*,'(a)') "error when calling asa_bcp: 'max_n_hd' must be a number greater than or equal to 0"
+        write(*,'(a)') "In the options, 'max_n_hd' must bea number greater than or equal to 0."
         stop
     endif
-    if (m.lt.1) then
-        write(*,'(a)') "error when calling asa_bcp: 'm' must be a number greater than or equal to 1"
+    if (min_gd.lt.0.d0) then
+        write(*,'(a)') "In the options, 'min_gd' must be a non-negative number."
         stop
     endif
-    if (z.lt.1) then
-        write(*,'(a)') "error when calling asa_bcp: 'z' must be a number greater than or equal to 1"
+    if (min_norm_proj_d.lt.0.d0) then
+        write(*,'(a)') "In the options, 'min_norm_proj_d' must be a non-negative number."
+        stop
+    endif
+    if (min_stepsize.lt.0.d0) then
+        write(*,'(a)') "In the options, 'min_stepsize' must be a non-negative number."
+        stop
+    endif
+    if (ls_memory.lt.1) then
+        write(*,'(a)') "In the options, 'ls_memory' must be a number greater than or equal to 1."
+        stop
+    endif
+    if (z.lt.0) then
+        write(*,'(a)') "In the options, 'z' must be a non-negative number."
         stop
     endif
     if (verbosity.lt.0) then
-        write(*,'(a)') "error when calling asa_bcp: 'verbosity' must be a number between 0 and 2"
+        write(*,'(a)') "In the options, 'verbosity' must be a number between 0 and 2."
         stop
     endif
     
