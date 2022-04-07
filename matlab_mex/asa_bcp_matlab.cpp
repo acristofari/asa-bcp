@@ -66,7 +66,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     unsigned int n;
     unsigned short int status;
     const double *cdbl_ptr;
-    bool obj_set,grad_set,hd_prod_set;
+    bool is_f_set,is_g_set,is_hd_set;
     const char *cchar_ptr;
     mxDouble *mdbl_ptr;
     mxArray *tmp_mxArray;
@@ -101,7 +101,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
         mxIsComplex(prhs[3]) || mxIsSparse(prhs[3])) {
         mexErrMsgTxt("The fourth input must be a real column vector.");
     }
-    obj_set = grad_set = hd_prod_set = false;
+    is_f_set = is_g_set = is_hd_set = false;
     for (int i=0; i<mxGetNumberOfFields(prhs[0]); i++) {
         tmp_mxArray = mxGetFieldByNumber(prhs[0],0,i);
         cchar_ptr = mxGetFieldNameByNumber(prhs[0],i);
@@ -109,17 +109,17 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
                 mexErrMsgTxt("In the structure passed as first input, 'funct' must be a function handle.");
             }
-            obj_set = true;
+            is_f_set = true;
         } else if (std::string(cchar_ptr).compare(std::string("grad")) == 0) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
                 mexErrMsgTxt("In the structure passed as first input, 'grad' must be a function handle.");
             }
-            grad_set = true;
+            is_g_set = true;
         } else if (std::string(cchar_ptr).compare(std::string("hd_prod")) == 0) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
                 mexErrMsgTxt("In the structure passed as first input, 'hd_prod' must be a function handle.");
             }
-            hd_prod_set = true;
+            is_hd_set = true;
         } else {
             mexErrMsgTxt("Not valid field name in the structure passed as first input.");
         }
@@ -219,9 +219,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
                 mexErrMsgTxt("Not valid field name in the structure of options.");
             }
         }
-        if (!(hd_prod_set || !opts.hd_exact)) {
-            mexErrMsgTxt("the Hessian-vector product must be specified (or set 'hd_exact' to false for approximating Hessian-vector products).");
-        }
+    }
+
+    if (!is_f_set) {
+        mexErrMsgTxt("The objective function must be specified.");
+    }
+    if (!is_g_set) {
+        mexErrMsgTxt("The gradient of the objective must be specified..");
+    }
+    if (hd_exact && ~is_hd_prod_set) {
+        mexErrMsgTxt("The Hessian-vector product must be specified (or set 'hd_exact' to false in the options to approximate Hessian-vector products).");
     }
 
     // build an object of type Asa_bcp
