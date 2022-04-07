@@ -6,7 +6,8 @@
 //                                min f(x)
 //                           s.t. l <= x <= u
 // 
-// where f(x) is a twice continuously differentiable.
+// with given vectors l, u and where f(x) is a twice continuously
+// differentiable function.
 // 
 // -------------------------------------------------------------------------
 // 
@@ -25,7 +26,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 // 
 // Last update of this file:
-// January 31st, 2022
+// April 7th, 2022
 // 
 // Licensing:
 // This file is part of ASA-BCP.
@@ -42,7 +43,7 @@
 // 
 // Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 // Stefano Lucidi, Francesco Rinaldi.
-// 
+//
 // -------------------------------------------------------------------------
 
 
@@ -57,7 +58,7 @@ typedef double mxDouble;
 #endif
 
 // This is a MEX file for Matlab.
-// See the file 'README.txt' to know how to build the MEX file and run the
+// See the file 'README.md' to know how to build the MEX file and run the
 // program.
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
@@ -71,28 +72,34 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     mxArray *tmp_mxArray;
 
     // check the number of inupts and outputs
-    if (nrhs<4 || nrhs>5) {
-        mexErrMsgTxt("when calling asa_bcp, the number of input arguments must be either 4 or 5.\n");
+    if (nrhs<4) {
+        mexErrMsgTxt("At least four inputs are required.\n");
     }
-    if (nlhs<1 || nlhs>3) {
-        mexErrMsgTxt("when calling asa_bcp, the number of output arguments must be between 1 and 3.\n");
+    if (nrhs>5) {
+        mexErrMsgTxt("At most five inputs are required.\n");
+    }
+    if (nlhs<1) {
+        mexErrMsgTxt("At least one input is required.\n");
+    }
+    if (nlhs>3) {
+        mexErrMsgTxt("At most three outputs are required.\n");
     }
 
     // check inputs
     if (!mxIsStruct(prhs[0]) || mxGetNumberOfElements(prhs[0])>1) {
-        mexErrMsgTxt("when calling asa_bcp, the first input argument must be a structure of function handle elements.");
+        mexErrMsgTxt("The first input must be a structure of function handle elements.");
     }
-    if (mxIsScalar(prhs[1]) || !mxIsDouble(prhs[1]) || mxIsComplex(prhs[1]) ||
-        mxGetNumberOfDimensions(prhs[1])>2 || mxIsSparse(prhs[1]) || mxGetN(prhs[1])!=1) {
-        mexErrMsgTxt("when calling asa_bcp, the second input argument must be a full real column vector.");
+    if (mxGetNumberOfDimensions(prhs[1])>2 || mxGetN(prhs[1])!=1 || !mxIsDouble(prhs[1]) ||
+        mxIsComplex(prhs[1]) || mxIsSparse(prhs[1])) {
+        mexErrMsgTxt("The second input must be a real column vector.");
     }
-    if (mxIsScalar(prhs[2]) || !mxIsDouble(prhs[2]) || mxIsComplex(prhs[2]) ||
-        mxGetNumberOfDimensions(prhs[2])>2 || mxIsSparse(prhs[2]) || mxGetN(prhs[2])!=1) {
-        mexErrMsgTxt("when calling asa_bcp, the third input argument must be a full real column vector.");
+    if (mxGetNumberOfDimensions(prhs[2])>2 || mxGetN(prhs[2])!=1 || !mxIsDouble(prhs[2]) ||
+        mxIsComplex(prhs[2]) || mxIsSparse(prhs[2])) {
+        mexErrMsgTxt("The third input must be a real column vector.");
     }
-    if (mxIsScalar(prhs[3]) || !mxIsDouble(prhs[3]) || mxIsComplex(prhs[3]) ||
-        mxGetNumberOfDimensions(prhs[3])>2 || mxIsSparse(prhs[3]) || mxGetN(prhs[3])!=1) {
-        mexErrMsgTxt("when calling asa_bcp, the fourth input argument must be a full real column vector.");
+    if (mxGetNumberOfDimensions(prhs[3])>2 || mxGetN(prhs[3])!=1 || !mxIsDouble(prhs[3]) ||
+        mxIsComplex(prhs[3]) || mxIsSparse(prhs[3])) {
+        mexErrMsgTxt("The fourth input must be a real column vector.");
     }
     obj_set = grad_set = hd_prod_set = false;
     for (int i=0; i<mxGetNumberOfFields(prhs[0]); i++) {
@@ -100,28 +107,31 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
         cchar_ptr = mxGetFieldNameByNumber(prhs[0],i);
         if (std::string(cchar_ptr).compare(std::string("funct")) == 0) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
-                mexErrMsgTxt("when calling asa_bcp, the objective function must be a function handle.");
+                mexErrMsgTxt("In the structure passed as first input, 'funct' must be a function handle.");
             }
             obj_set = true;
         } else if (std::string(cchar_ptr).compare(std::string("grad")) == 0) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
-                mexErrMsgTxt("when calling asa_bcp, the gradient of the objective function must be a function handle.");
+                mexErrMsgTxt("In the structure passed as first input, 'grad' must be a function handle.");
             }
             grad_set = true;
         } else if (std::string(cchar_ptr).compare(std::string("hd_prod")) == 0) {
             if(!mxIsClass(tmp_mxArray,"function_handle")) {
-                mexErrMsgTxt("when calling asa_bcp, the Hessian-vector product must be a function handle.");
+                mexErrMsgTxt("In the structure passed as first input, 'hd_prod' must be a function handle.");
             }
             hd_prod_set = true;
         } else {
-            mexErrMsgTxt("when calling asa_bcp, a not valid field name is present in the structure of the first input argument.");
+            mexErrMsgTxt("Not valid field name in the structure passed as first input.");
         }
     }
 
     // get the problem dimension
     n = (unsigned int) mxGetM(prhs[1]);
-    if (n!=mxGetM(prhs[2]) || n!=mxGetM(prhs[3])) {
-        mexErrMsgTxt("when calling asa_bcp, the dimension of the starting point and the dimension of the variable bounds must agree.");
+    if (n != mxGetM(prhs[2])) {
+        mexErrMsgTxt("Lower bound dimension and problem dimension must agree.");
+    }
+    if (n !=mxGetM(prhs[3])) {
+        mexErrMsgTxt("Upper bound dimension and problem dimension must agree.");
     }
 
    // build an object of type Problem
@@ -131,86 +141,86 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     p.set_starting_point(prhs[1]); // set starting point
     p.set_bounds(prhs[2],prhs[3]); // set bounds
 
-    // get asa-bcp options
+    // get options
     asa_bcp_options opts;
     if (nrhs > 4) {
         if (!mxIsStruct(prhs[4]) || mxGetNumberOfElements(prhs[4])>1) {
-            mexErrMsgTxt("when calling asa_bcp, the fifth input argument (which is optional) must be a structure.");
+            mexErrMsgTxt("The fifth input (which is optional) must be a structure.");
         }
         for (int i=0; i<mxGetNumberOfFields(prhs[4]); i++) {
             tmp_mxArray = mxGetFieldByNumber(prhs[4],0,i);
             cchar_ptr = mxGetFieldNameByNumber(prhs[4],i);
             if (std::string(cchar_ptr).compare(std::string("eps_opt")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'eps_opt' must be a number greater than or equal to 0.");
+                    mexErrMsgTxt("In the options, 'eps_opt' must be a non-negative number.");
                 }
                 opts.eps_opt = *mxGetDoubles(tmp_mxArray);
-            } else if (std::string(cchar_ptr).compare(std::string("min_gd")) == 0) {
-                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'min_gd' must be a number greater than or equal to 0.");
-                }
-                opts.min_gd = *mxGetDoubles(tmp_mxArray);
-            } else if (std::string(cchar_ptr).compare(std::string("min_norm_proj_d")) == 0) {
-                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'min_norm_proj_d' must be a number greater than or equal to 0.");
-                }
-                opts.min_norm_proj_d = *mxGetDoubles(tmp_mxArray);
-            } else if (std::string(cchar_ptr).compare(std::string("min_stepsize")) == 0) {
-                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'min_stepsize' must be a number greater than or equal to 0.");
-                }
-                opts.min_stepsize = *mxGetDoubles(tmp_mxArray);
             } else if (std::string(cchar_ptr).compare(std::string("max_it")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'max_it' must be a number greater than or equal to 0.");
+                    mexErrMsgTxt("In the options, 'max_it' must be a number greater than or equal to 1.");
                 }
                 opts.max_it = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("max_n_f")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'max_n_f' must be a number greater than or equal to 1.");
+                    mexErrMsgTxt("In the options, 'max_n_f' must be a number greater than or equal to 1.");
                 }
                 opts.max_n_f = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("max_n_g")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'max_n_g' must be a number greater than or equal to 1.");
+                    mexErrMsgTxt("In the options, 'max_n_g' must bea number greater than or equal to 1.");
                 }
                 opts.max_n_g = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("max_n_hd")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'max_n_hd' must be a number greater than or equal to 0.");
+                    mexErrMsgTxt("In the options, 'max_n_hd' must bea number greater than or equal to 0.");
                 }
                 opts.max_n_hd = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("min_f")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'min_f' must be a real number.");
+                    mexErrMsgTxt("In the options, 'min_f' must be a real number.");
                 }
                 opts.min_f = *mxGetDoubles(tmp_mxArray);
-            } else if (std::string(cchar_ptr).compare(std::string("m")) == 0) {
+            } else if (std::string(cchar_ptr).compare(std::string("min_gd")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'm' must be a number greater than or equal to 1.");
+                    mexErrMsgTxt("In the options, 'min_gd' must be a non-negative number.");
                 }
-                opts.m = (int)floor(*mxGetDoubles(tmp_mxArray));
+                opts.min_gd = *mxGetDoubles(tmp_mxArray);
+            } else if (std::string(cchar_ptr).compare(std::string("min_norm_proj_d")) == 0) {
+                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
+                    mexErrMsgTxt("In the options, 'min_norm_proj_d' must be a non-negative number.");
+                }
+                opts.min_norm_proj_d = *mxGetDoubles(tmp_mxArray);
+            } else if (std::string(cchar_ptr).compare(std::string("min_stepsize")) == 0) {
+                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
+                    mexErrMsgTxt("In the options, 'min_stepsize' must be a non-negative number.");
+                }
+                opts.min_stepsize = *mxGetDoubles(tmp_mxArray);
+            } else if (std::string(cchar_ptr).compare(std::string("ls_memory")) == 0) {
+                if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
+                    mexErrMsgTxt("In the options, 'ls_memory' must be a number greater than or equal to 1.");
+                }
+                opts.ls_memory = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("z")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'z' must be a number greater than or equal to 1.");
+                    mexErrMsgTxt("In the options, 'z' must be a non-negative number.");
                 }
                 opts.z = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else if (std::string(cchar_ptr).compare(std::string("hd_exact")) == 0) {
                 if (!mxIsLogicalScalar(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'hd_exact' must be a logical.");
+                    mexErrMsgTxt("In the options, 'hd_exact' must be a logical.");
                 }
                 opts.hd_exact = *mxGetLogicals(tmp_mxArray);
             } else if (std::string(cchar_ptr).compare(std::string("verbosity")) == 0) {
                 if (!mxIsScalar(tmp_mxArray) || !mxIsDouble(tmp_mxArray) || mxIsComplex(tmp_mxArray)) {
-                    mexErrMsgTxt("when calling asa_bcp, 'verbosity' must be a number between 0 and 2.");
+                    mexErrMsgTxt("In the options, 'verbosity' must be a number between 0 and 2.");
                 }
                 opts.verbosity = (int)floor(*mxGetDoubles(tmp_mxArray));
             } else {
-                mexErrMsgTxt("when calling asa_bcp, a not valid field name is present in the structure of the fifth input (which is optional).");
+                mexErrMsgTxt("Not valid field name in the structure of options.");
             }
         }
         if (!(hd_prod_set || !opts.hd_exact)) {
-            mexErrMsgTxt("when calling asa_bcp, the Hessian-vector product must be specified (or set 'hd_exact' to false for approximating Hessian-vector products).");
+            mexErrMsgTxt("the Hessian-vector product must be specified (or set 'hd_exact' to false for approximating Hessian-vector products).");
         }
     }
 
@@ -219,7 +229,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
     // check if an error occurred when calling the Asa_bcp constructor (something went wrong if 'status' > 0)
     if (status > 0) {
-        mexErrMsgTxt("error when calling the Asa_bcp constructor");
+        mexErrMsgTxt("Something went wrong when calling the Asa_bcp constructor.");
     }
 
     // call the solver

@@ -6,7 +6,7 @@ optimization problems of the following form:
          min f(x)
     s.t. l <= x <= u
 
-where _f(x)_ is a twice continuously differentiable function.
+with given vectors _l, u_ and where _f(x)_ is a twice continuously differentiable function.
 
 ASA-BCP combines an active-set strategy with a truncated-Newton search direction and a non-monotone line search.
 
@@ -38,7 +38,7 @@ along with ASA-BCP. If not, see <http://www.gnu.org/licenses/>.
 Copyright 2017-2022 Andrea Cristofari, Marianna De Santis,
 Stefano Lucidi, Francesco Rinaldi.
 
-## How to use ASA-BCP (via C++ source MEX file for Matlab)
+## How to use ASA-BCP (in Matlab using C++ source MEX file)
 
 1. This directory should contain the following files:
     * `asa_bcp_matlab.cpp`,
@@ -50,13 +50,11 @@ Stefano Lucidi, Francesco Rinaldi.
     `../c++`, and the files `main.m` and `problem.m`, located in
     `../matlab`.
 
-2. Run `make.m` to build the MEX file.
+2. In Matlab, run `make.m` to build the MEX file.
 
-3. See the file `../matlab/syntax.txt` to know how to call ASA-BCP,
-    change algorithm parameters and get output values.
+3. See the file `../matlab/usage.txt` to know how to call ASA-BCP in Matlab, change
+   algorithm parameters and get output values.
 
 4. Copy the files `main.m` and `problem.m` from `../matlab` to the current
-   directory for running an example. After copying the files, to run the 
-   example just run `main.m`. The solution found by the algorithm will be
-   reported in the file `opt_sol.txt` and the final statistics will be
-   reported in the file `statistics.txt`.
+   directory for an example. After copying the files, to run the 
+   example just call `main.m` in Matlab.
