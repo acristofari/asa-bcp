@@ -267,7 +267,7 @@ subroutine asa_bcp(n,x,f,l,u,opts,flag)
         write(*,'(a)') "In the options, 'min_stepsize' must be a non-negative number."
         stop
     endif
-    if (ls_memory.lt.1) then
+    if (m.lt.1) then
         write(*,'(a)') "In the options, 'ls_memory' must be a number greater than or equal to 1."
         stop
     endif
