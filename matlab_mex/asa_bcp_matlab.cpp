@@ -26,7 +26,7 @@
 // Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 // 
 // Last update of this file:
-// April 7th, 2022
+// April 8th, 2022
 // 
 // Licensing:
 // This file is part of ASA-BCP.
@@ -58,8 +58,7 @@ typedef double mxDouble;
 #endif
 
 // This is a MEX file for Matlab.
-// See the file 'README.md' to know how to build the MEX file and run the
-// program.
+// See the file 'README.md' to know how to build the MEX file and run the program.
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
@@ -73,16 +72,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
     // check the number of inupts and outputs
     if (nrhs<4) {
-        mexErrMsgTxt("At least four inputs are required.\n");
+        mexErrMsgTxt("At least four inputs are required.");
     }
     if (nrhs>5) {
-        mexErrMsgTxt("At most five inputs are required.\n");
+        mexErrMsgTxt("At most five inputs are required.");
     }
     if (nlhs<1) {
-        mexErrMsgTxt("At least one input is required.\n");
+        mexErrMsgTxt("At least one input is required.");
     }
     if (nlhs>3) {
-        mexErrMsgTxt("At most three outputs are required.\n");
+        mexErrMsgTxt("At most three outputs are required.");
     }
 
     // check inputs
@@ -225,7 +224,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
         mexErrMsgTxt("The objective function must be specified.");
     }
     if (!is_g_set) {
-        mexErrMsgTxt("The gradient of the objective must be specified..");
+        mexErrMsgTxt("The gradient of the objective must be specified.");
     }
     if (opts.hd_exact && !is_hd_set) {
         mexErrMsgTxt("The Hessian-vector product must be specified (or set 'hd_exact' to false in the options to approximate Hessian-vector products).");

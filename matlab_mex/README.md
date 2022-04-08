@@ -52,7 +52,7 @@ Stefano Lucidi, Francesco Rinaldi.
 
 2. In Matlab, run `make.m` to build the MEX file.
 
-3. See the file `../matlab/usage.txt` to know how to call ASA-BCP in Matlab, change
+3. See the file `../matlab/usage.txt` to know how to call ASA-BCP from Matlab, change
    algorithm parameters and get output values.
 
 4. Copy the files `main.m` and `problem.m` from `../matlab` to the current
